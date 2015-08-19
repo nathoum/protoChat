@@ -16,13 +16,15 @@
                     <p class="username"></p>
                 </div>
                 <div class="info-loggedusers">
-                    <p class="active-user"></p>
                     <p class="nbusers-logged"><span></span> pers. connectées</p>
                     <ul class="list-userslogged"></ul>
                 </div>
 
             </header>
 
+            <div class="active-users-area">
+                <p class="active-user"></p>
+            </div>
             <section id="zone_chat">
                 
             </section>
@@ -116,7 +118,7 @@
             
             // Ajoute un message dans la page
             function insereMessage(pseudo, message) {
-                $('#zone_chat').append('<p><strong>' + pseudo + '</strong> ' + message + '</p>');
+                $('#zone_chat').append('<p class="msgofme"><strong>' + pseudo + '</strong> ' + message + '</p>');
             }
 
 

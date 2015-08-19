@@ -89,3 +89,18 @@ html, body {
 .info-loggedusers {
 	margin-left: 25px;
 }
+
+.active-users-area {
+	background-color: #D1D5D8;
+	text-align: center;
+	height: 30px;
+}
+
+#zone_chat .msgofme {
+	color: #2C82C9 !important;
+}
+
+
+#zone_chat .msgofme strong {
+	background-color: #2C82C9 !important;
+}
