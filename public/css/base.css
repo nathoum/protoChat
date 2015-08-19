@@ -1,0 +1,83 @@
+/*reset*/
+html, body {
+	padding: 0;
+	margin: 0;
+}
+
+
+#zone_chat {
+	padding-bottom: 50px;
+}
+
+.form-message-area {
+	background-color: #D1D5D8;
+	padding: 50px 0px;
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+}
+
+#message {
+	height: 50px;
+    width: 60%;
+    /* text-align: center; */
+    margin: 0 auto;
+    margin-left: 10px;
+}
+
+#zone_chat strong {
+    color: white;
+    background-color: black;
+    padding: 2px;
+}
+
+.header-discgroup {
+    background-color: #A38F84;
+    padding: 20px;
+    height: 70px;
+    margin-bottom: 5px;
+}
+
+.login-info-area {
+	display: none;
+}
+
+.login-info-area .username span {
+	padding: 10px;
+	background-color: #54ACD2;
+}
+
+.login-info-area .quit-group {
+	color: black;
+}
+
+
+
+.login-info-area, .info-loggedusers {
+	display: inline-block !important;
+	vertical-align: top;
+	width: 200px;
+}
+
+
+
+.list-userslogged {
+	list-style: none;
+}
+
+.list-userslogged li {
+	display: inline-block;
+	text-align: center;
+	padding: 0px 10px;
+}
+
+.userlogged-itemcolor {
+	display: inline-block;
+    background-color: #2C82C9;
+    width: 20px;
+    height: 20px;
+}
+
+.login-info-area {
+	display: none;
+}

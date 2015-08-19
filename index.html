@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Chat temps réel</title>
+
+        <link rel="stylesheet" type="text/css" href="css/base.css" />
+    </head>
+ 
+    <body>
+
+        <header class="header-discgroup">
+            <div class="login-info-area">
+                <a href="#" class="quit-group">Quitter</a>
+                <p class="username"></p>
+            </div>
+            <div class="info-loggedusers">
+                <p class="active-user"></p>
+                <ul class="list-userslogged"></ul>
+            </div>
+
+        </header>
+
+       <!-- <section class="login-area">
+           <form id="form_login">
+               <input type="text" name="login" id="login" placeholder="Login" size="50" autofocus />
+               <input type="submit" id="submit" value="Envoyer" />
+           </form>
+       </section> -->
+
+        
+
+        <section id="zone_chat">
+            
+        </section>
+
+        <section class="form-message-area">
+            <form action="/" method="post" id="formulaire_chat">
+                <input type="text" name="message" id="message" placeholder="Votre message..." size="50" autofocus />
+                <input type="submit" id="envoi_message" value="Envoyer" />
+            </form>
+        </section>
+
+        <!-- <aside> 
+            <h2>Connectés</h2>
+            <ul class="connected-users">
+        
+            </ul>
+        </aside> -->
+
+
+
+        <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+        <script src="/socket.io/socket.io.js"></script>
+        <script>
+
+            // Connexion à socket.io
+            var socket = io.connect('http://localhost:8080');
+
+            // On demande le pseudo, on l'envoie au serveur et on l'affiche dans le titre
+           var pseudo = prompt('Quel est votre pseudo ?');
+            socket.emit('nouveau_client', pseudo);
+            document.title = pseudo + ' - ' + document.title;
+            $(".login-info-area").show();
+            $(".login-info-area .username").html("Connecté en tant que <span>"+pseudo+"</span>");
+
+            /*$('#form_login').submit(function (e) {
+                e.preventDefault();
+                var pseudo = $('#login').val();
+                socket.emit('nouveau_client', pseudo);
+                document.title = pseudo + ' - ' + document.title;
+            });*/
+
+            /*$('#form_login').submit(function (e) {
+              e.preventDefault();
+              var pseudo = $('#form_login input').val().trim();
+              socket.emit('nouveau_client', pseudo);
+              document.title = pseudo + ' - ' + document.title;
+              console.log(pseudo);
+            });*/
+
+            /**
+             * Déconnexion d'un utilisateur
+             */
+            socket.on('user-logout', function (pseudo) {  
+              $('#zone_chat').append('<p><em>' + pseudo + ' a quitté le Chat !</em></p>');
+              $('.writing-'+pseudo).remove();
+            });
+
+
+
+            // Quand on reçoit un message, on l'insère dans la page
+            socket.on('message', function(data) {
+                insereMessage(data.pseudo, data.message)
+            })
+
+            // Quand un nouveau client se connecte, on affiche l'information
+            socket.on('nouveau_client', function(pseudo) {
+                $('#zone_chat').append('<p><em>' + pseudo + ' a rejoint le Chat !</em></p>');
+
+                $('.connected-users').append('<li><em>' + pseudo + '</em></li>');
+
+                userLoggedNotif(pseudo);
+            })
+
+            // Lorsqu'on envoie le formulaire, on transmet le message et on l'affiche sur la page
+            $('#formulaire_chat').submit(function () {
+                var message = $('#message').val();
+                socket.emit('message', message); // Transmet le message aux autres
+                insereMessage(pseudo, message); // Affiche le message aussi sur notre page
+                isTyping = false;
+                $('#message').val('').focus(); // Vide la zone de Chat et remet le focus dessus
+                return false; // Permet de bloquer l'envoi "classique" du formulaire
+            });
+
+            
+            // Ajoute un message dans la page
+            function insereMessage(pseudo, message) {
+                $('#zone_chat').append('<p><strong>' + pseudo + '</strong> ' + message + '</p>');
+            }
+
+            function userLoggedNotif(pseudo) {
+                $(".list-userslogged").append("<li><span class='userlogged-itemcolor'></span><p>"+pseudo+"</p></li>");
+            }
+
+            $( "#message" ).keyup(function() {
+              console.log("est en train d'écrire");
+              socket.emit('messagewriting', pseudo + "est en train d'écrire...");
+            });
+
+
+            /**
+             * Détection saisie utilisateur
+             */
+            var typingTimer;  
+            var isTyping = false;
+
+            $('#message').keypress(function () {
+                console.log("typing");
+
+                //console.log(pseudo+" pseudoooo");
+              clearTimeout(typingTimer);
+              if (!isTyping) {
+                socket.emit('start-typing', pseudo);
+                isTyping = true;
+              }
+            });
+
+            //Stop typing
+            $('#message').keyup(function () {
+              clearTimeout(typingTimer);
+              typingTimer = setTimeout(function () {
+                if (isTyping) {
+                  socket.emit('stop-typing', pseudo);
+                  isTyping = false;
+                  console.log("stop typing");
+                }
+              }, 5000);
+            });
+
+            /**
+             * Gestion saisie des autres utilisateurs
+             */
+            socket.on('update-typing', function (pseudo) {  
+                console.log("update!");
+              $(".active-user").append("<span class='writing-"+pseudo+"'>"+pseudo+" est en train d'écrire </span>");
+            });
+
+            socket.on('update-stoptyping', function (pseudo) {  
+                $('.writing-'+pseudo).remove();
+            });
+
+
+        </script>
+    </body>
+</html>
