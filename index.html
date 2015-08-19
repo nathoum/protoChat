@@ -9,28 +9,31 @@
  
     <body>
 
-        <header class="header-discgroup">
-            <div class="login-info-area">
-                <a href="#" class="quit-group">Quitter</a>
-                <p class="username"></p>
-            </div>
-            <div class="info-loggedusers">
-                <p class="active-user"></p>
-                <ul class="list-userslogged"></ul>
-            </div>
+        <div id="main-discgroup">
+            <header class="header-discgroup">
+                <div class="login-info-area">
+                    <a href="#" class="quit-group">Quitter</a>
+                    <p class="username"></p>
+                </div>
+                <div class="info-loggedusers">
+                    <p class="active-user"></p>
+                    <p class="nbusers-logged"><span></span> pers. connectées</p>
+                    <ul class="list-userslogged"></ul>
+                </div>
 
-        </header>
+            </header>
 
-        <section id="zone_chat">
-            
-        </section>
+            <section id="zone_chat">
+                
+            </section>
 
-        <section class="form-message-area">
-            <form action="/" method="post" id="formulaire_chat">
-                <input type="text" name="message" id="message" placeholder="Votre message..." size="50" autofocus />
-                <input type="submit" id="envoi_message" value="Envoyer" />
-            </form>
-        </section>
+            <section class="form-message-area">
+                <form action="/" method="post" id="formulaire_chat">
+                    <input type="text" name="message" id="message" placeholder="Votre message..." size="50" autofocus />
+                    <input type="submit" id="envoi_message" value="Envoyer" />
+                </form>
+            </section>
+        </div>
 
 
 
@@ -45,8 +48,11 @@
            var pseudo = prompt('Quel est votre pseudo ?');
             socket.emit('nouveau_client', pseudo);
             document.title = pseudo + ' - ' + document.title;
+            $("#main-discgroup").show();
             $(".login-info-area").show();
             $(".login-info-area .username").html("Connecté en tant que <span>"+pseudo+"</span>");
+
+           // userLoggedNotif(pseudo);
 
             /**
              * Déconnexion d'un utilisateur
@@ -54,6 +60,31 @@
             socket.on('user-logout', function (pseudo) {  
               $('#zone_chat').append('<p><em>' + pseudo + ' a quitté le Chat !</em></p>');
               $('.writing-'+pseudo).remove();
+            });
+
+            $(".quit-group").click(function() {
+                $("#main-discgroup").hide();
+                socket.emit('disconnect-manual'); 
+            });
+
+
+           /*$(".quit-group").click(function() {
+                $('#zone_chat').append('<p><em>' + pseudo + ' a quitté le Chat !</em></p>');
+                $('.writing-'+pseudo).remove();
+
+            });*/
+
+            socket.on('update-userslogged', function (loggedUsers) {  
+                console.log(loggedUsers);
+                var cptnbuserslogged = 0;
+                $(".list-userslogged").html("");
+               for (i = 0; i < loggedUsers.length; i++) {
+                    console.log(loggedUsers[i]);
+                    cptnbuserslogged ++;
+                    //html
+                    $(".nbusers-logged span").html(cptnbuserslogged);
+                    $(".list-userslogged").append("<li><span class='userlogged-itemcolor'></span><p>"+loggedUsers[i]+"</p></li>");
+                }
             });
 
 
@@ -69,7 +100,7 @@
 
                 $('.connected-users').append('<li><em>' + pseudo + '</em></li>');
 
-                userLoggedNotif(pseudo);
+                //userLoggedNotif(pseudo);
             })
 
             // Lorsqu'on envoie le formulaire, on transmet le message et on l'affiche sur la page
@@ -88,9 +119,6 @@
                 $('#zone_chat').append('<p><strong>' + pseudo + '</strong> ' + message + '</p>');
             }
 
-            function userLoggedNotif(pseudo) {
-                $(".list-userslogged").append("<li><span class='userlogged-itemcolor'></span><p>"+pseudo+"</p></li>");
-            }
 
             $( "#message" ).keyup(function() {
               console.log("est en train d'écrire");

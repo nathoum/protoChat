@@ -34,7 +34,7 @@ html, body {
 .header-discgroup {
     background-color: #A38F84;
     padding: 20px;
-    height: 70px;
+    height: 90px;
     margin-bottom: 5px;
 }
 
@@ -56,7 +56,6 @@ html, body {
 .login-info-area, .info-loggedusers {
 	display: inline-block !important;
 	vertical-align: top;
-	width: 200px;
 }
 
 
@@ -80,4 +79,13 @@ html, body {
 
 .login-info-area {
 	display: none;
+}
+
+.nbusers-logged, .list-userslogged {
+	display: inline-block;
+    vertical-align: top;
+}
+
+.info-loggedusers {
+	margin-left: 25px;
 }

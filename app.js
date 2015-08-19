@@ -37,12 +37,32 @@ io.sockets.on('connection', function (socket, pseudo) {
         socket.pseudo = pseudo;
         socket.broadcast.emit('nouveau_client', pseudo);
 
-        //loggedUsers.push(pseudo);
+        
+
+        loggedUsers.push(pseudo);
+        socket.emit('update-userslogged', loggedUsers);
+
+        socket.broadcast.emit('update-userslogged', loggedUsers);
     });
 
 
-        socket.on('disconnect', function () {
+        /*socket.on('disconnect', function () {
             socket.broadcast.emit('user-logout', socket.pseudo);
+            loggedUsers.splice(pseudo);
+            socket.emit('update-userslogged', loggedUsers);
+            socket.broadcast.emit('update-userslogged', loggedUsers);
+        });*/
+
+        socket.on('disconnect-manual', function () {
+            socket.broadcast.emit('user-logout', socket.pseudo);
+            //loggedUsers.remove(pseudo,1);
+            var indexUser = loggedUsers.indexOf(pseudo);
+            loggedUsers.splice(indexUser, 1);
+   
+            console.log("users=>"+loggedUsers);
+
+            socket.emit('update-userslogged', loggedUsers);
+            socket.broadcast.emit('update-userslogged', loggedUsers);
         });
 
         
