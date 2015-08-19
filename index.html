@@ -21,15 +21,6 @@
 
         </header>
 
-       <!-- <section class="login-area">
-           <form id="form_login">
-               <input type="text" name="login" id="login" placeholder="Login" size="50" autofocus />
-               <input type="submit" id="submit" value="Envoyer" />
-           </form>
-       </section> -->
-
-        
-
         <section id="zone_chat">
             
         </section>
@@ -40,13 +31,6 @@
                 <input type="submit" id="envoi_message" value="Envoyer" />
             </form>
         </section>
-
-        <!-- <aside> 
-            <h2>Connectés</h2>
-            <ul class="connected-users">
-        
-            </ul>
-        </aside> -->
 
 
 
@@ -63,21 +47,6 @@
             document.title = pseudo + ' - ' + document.title;
             $(".login-info-area").show();
             $(".login-info-area .username").html("Connecté en tant que <span>"+pseudo+"</span>");
-
-            /*$('#form_login').submit(function (e) {
-                e.preventDefault();
-                var pseudo = $('#login').val();
-                socket.emit('nouveau_client', pseudo);
-                document.title = pseudo + ' - ' + document.title;
-            });*/
-
-            /*$('#form_login').submit(function (e) {
-              e.preventDefault();
-              var pseudo = $('#form_login input').val().trim();
-              socket.emit('nouveau_client', pseudo);
-              document.title = pseudo + ' - ' + document.title;
-              console.log(pseudo);
-            });*/
 
             /**
              * Déconnexion d'un utilisateur
